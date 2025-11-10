@@ -6,6 +6,7 @@ date: "2025-11-09"
 
 ```{r}
 library(tidyverse)
+library(knitr)
 ```
 
 
@@ -194,8 +195,44 @@ baltimore_prop =
   broom::tidy() |> 
   select(estimate, conf.low, conf.high)
 ```
+WAS THERE A MORE EFFICIENT WAY TO DO THIS??? SEE BELOW: IS MY CODE REDUNDANT???
 
 
+Running prop.test for each city, extracting the proportion and confidence intervals, and creating a dataframe:
+
+```{r}
+unsolved_prop =
+  homicides |> 
+  group_by(city_state) |> 
+  summarise(
+    total = n(),
+    unsolved = sum(disposition %in% c("Closed without arrest", "Open/No arrest")),
+    .groups = "drop"
+  )
+
+prop_test = function(x, n) {
+  
+  prop.test(x = x, n = n) |> 
+    broom::tidy() |> 
+    select(estimate, conf.low, conf.high)
+  
+}
+
+homicides_output = 
+  unsolved_prop |> 
+  mutate(
+    prop_results = map2(unsolved, total, prop_test)
+  ) |> 
+  unnest() 
+  
+```
+
+Table showing #homicides, #unsolved, proportion unsolved, and confidence limits by city:
+
+```{r}
+homicides_output |> 
+  kable()
+```
 
 
 
