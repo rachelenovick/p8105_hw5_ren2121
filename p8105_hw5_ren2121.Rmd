@@ -28,7 +28,7 @@ bday_sim = function (n_room) {
 bday_sim_results =
   expand_grid(
     group_size = 2:50,
-    iter = 1:10,000
+    iter = 1:10000
   ) |> 
   mutate(
     result = map_lgl(group_size, bday_sim)
@@ -39,7 +39,7 @@ bday_sim_results =
   summarize(
     prob_repeat = mean(result)
   )
-#comment! I THINK THERE'S A PROBLEM!!! it looks like 100% probability, but that can't be. I don't know how to fix this and I don't think I really understand this code.
+
 ```
 
 Plotting the probability as a function of group size:
@@ -74,9 +74,23 @@ t.test(x, mu = 0) |>
 
 set.seed(3) #my favorite number
 
+#Generating 5000 datasets for mu = 0
+mu_zero =
+  expand_grid(
+    mu_true = 0,
+    iter = 1:5000
+  )
+mu_zero_results_df = 
+  mu_zero |> 
+  mutate(
+    results = map(mu_true, sim_ttest)
+  ) |> 
+  unnest(results)
+
+#Generating 5000 datasets for mu = 0:6
 power_df =
   expand_grid(
-    mu_true = 1:6,
+    mu_true = 0:6,
     iter = 1:5000
   )
 power_results_df = 
@@ -191,7 +205,7 @@ There were 1825 unsolved homicides in Baltimore, MD.
 
 ```{r}
 baltimore_prop =
-  prop.test(x = 1825, n =2827) |> 
+  prop.test(x = 1825, n = 2827) |> 
   broom::tidy() |> 
   select(estimate, conf.low, conf.high)
 ```
@@ -232,6 +246,12 @@ Table showing #homicides, #unsolved, proportion unsolved, and confidence limits 
 ```{r}
 homicides_output |> 
   kable()
+```
+
+Plot of estimates and CIs of proportion of unsolved homicides by city:
+
+```{r}
+
 ```
 
 
