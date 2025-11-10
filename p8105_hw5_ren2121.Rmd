@@ -177,3 +177,13 @@ homicides2 |>
 
 There were 2827 homicides in Baltimore, MD in total.
 
+```{r}
+homicides2 |> 
+  filter(
+    city_state == "Baltimore, MD",
+    disposition %in% c("Closed without arrest", "Open/No arrest")) |> 
+  count()
+  
+```
+
+There were 1825 unsolved homicides in Baltimore, MD.
