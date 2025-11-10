@@ -148,7 +148,32 @@ COMMENT ON PLOT!!!!! ANSWER: Is the sample average of 𝜇̂
  across tests for which the null is rejected approximately equal to the true value of 𝜇
 ? Why or why not?
 
+## Problem 3
 
+Reading in the dataset from github:
 
+```{r}
+url = "https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv"
 
+homicides = read_csv(url)
+```
+
+*Describing the raw data*
+
+The homicide dataset is contains 52179 observations and 12 variables. It contains the following variables that describe each instance of criminal homicide over the past decade in 50 of the largest U.S. cities: `r paste(names(homicides), collapse = ", ")`.
+
+```{r}
+homicides2 =
+  homicides |> 
+  mutate(
+    city_state = paste(city, state, sep = ", ")
+  )
+
+homicides2 |>
+  filter(city_state == "Baltimore, MD") |> 
+  count()
+  
+```
+
+There were 2827 homicides in Baltimore, MD in total.
 
