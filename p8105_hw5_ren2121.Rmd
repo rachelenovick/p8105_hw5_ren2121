@@ -163,13 +163,13 @@ homicides = read_csv(url)
 The homicide dataset is contains 52179 observations and 12 variables. It contains the following variables that describe each instance of criminal homicide over the past decade in 50 of the largest U.S. cities: `r paste(names(homicides), collapse = ", ")`.
 
 ```{r}
-homicides2 =
+homicides =
   homicides |> 
   mutate(
     city_state = paste(city, state, sep = ", ")
   )
 
-homicides2 |>
+homicides |>
   filter(city_state == "Baltimore, MD") |> 
   count()
   
@@ -178,7 +178,7 @@ homicides2 |>
 There were 2827 homicides in Baltimore, MD in total.
 
 ```{r}
-homicides2 |> 
+homicides |> 
   filter(
     city_state == "Baltimore, MD",
     disposition %in% c("Closed without arrest", "Open/No arrest")) |> 
@@ -187,3 +187,20 @@ homicides2 |>
 ```
 
 There were 1825 unsolved homicides in Baltimore, MD.
+
+```{r}
+baltimore_prop =
+  prop.test(x = 1825, n =2827) |> 
+  broom::tidy() |> 
+  select(estimate, conf.low, conf.high)
+```
+
+
+
+
+
+
+
+
+
+
