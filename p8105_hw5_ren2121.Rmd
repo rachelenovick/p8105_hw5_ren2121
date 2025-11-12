@@ -103,7 +103,6 @@ power_results_df =
     results = map(mu_true, sim_ttest)
   ) |> 
   unnest(results)
-##SHOULD I DO 0:6 OR 1:6?? (ARGUMENT FOR 0:6 - BELOW, I CAN PLOT 0-6 MORE EASILY.)
 
 ```
 
@@ -211,12 +210,21 @@ There were 1825 unsolved homicides in Baltimore, MD.
 
 ```{r}
 baltimore_prop =
-  prop.test(x = 1825, n = 2827) |> 
+  prop.test(
+    x = homicides |> 
+      filter(
+        city_state == "Baltimore, MD",
+        disposition %in% c("Closed without arrest", "Open/No arrest")) |> 
+      count() |> 
+      pull(n), 
+    n = homicides |>
+      filter(city_state == "Baltimore, MD") |> 
+      count() |> 
+      pull(n)) |> 
   broom::tidy() |> 
   select(estimate, conf.low, conf.high)
 ```
-WAS THERE A MORE EFFICIENT WAY TO DO THIS??? SEE BELOW: IS MY CODE REDUNDANT???
-
+The estimated proportion of unsolved homicides is 0.646, with a confidence interval of (0.628, 0.663).
 
 Running prop.test for each city, extracting the proportion and confidence intervals, and creating a dataframe:
 
@@ -267,7 +275,7 @@ homicides_output |>
     y = "Proportion Unsolved",
     title = "Proportion of Unsolved Homicides by City (95% CI)"
   ) +
-  theme_minimal()+
+  theme_minimal() +
   theme(
     legend.position = "none")
 ```
