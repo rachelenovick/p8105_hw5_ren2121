@@ -48,12 +48,16 @@ Plotting the probability as a function of group size:
 bday_sim_results |> 
   ggplot(aes(x = group_size, y = prob_repeat)) +
   geom_point() +
-  geom_line()
+  geom_line() +
+  labs(
+    x = "Group Size",
+    y = "Probability of Repeated Birthdays",
+    title = "Probability of Repeated Birthdays vs. Group Size"
+  )
 
-#LABEL PLOTS!!!!!
 ```
+The plot follows a roughly S-shaped curve, demonstrating that as group size increases, the probability of two individuals having the same birthday increases at first steeply, and then asymptotically approaches a probability of 1.
 
-interpret here!!!!!!!!!!!
 
 ## Problem 2
 
@@ -99,6 +103,7 @@ power_results_df =
     results = map(mu_true, sim_ttest)
   ) |> 
   unnest(results)
+##SHOULD I DO 0:6 OR 1:6?? (ARGUMENT FOR 0:6 - BELOW, I CAN PLOT 0-6 MORE EASILY.)
 
 ```
 
@@ -119,7 +124,7 @@ power_results_df |>
     title = "Proportion Null Rejected vs. True Mean"
   )
 ```
-COMMENT ON PLOT!!!!!
+As the true mean increases in value, the proportion of times the null was rejected increases steeply, and then asymptotically approaches 1. 
 
 
 Plotting the average estimate of mu versus the true mu:
@@ -139,7 +144,7 @@ power_results_df |>
     title = "Average Estimate of Mean vs. True Mean"
   )
 ```
-COMMENT ON PLOT!!!!!
+The average estimate of 𝜇̂ increases proportionally with the true mean, and visually, the plot seems to show a perfect correlation. This makes sense because we took the average value from 5000 trials, so we would expect the average across all simulations to very nearly approximate the true mean.
 
 Plotting the average estimate of mu versus the true mu AMONG SAMPLES FOR WHICH NULL WAS REJECTED:
 
@@ -159,9 +164,10 @@ power_results_df |>
     title = "Average Estimate of Mean vs. True Mean"
   )
 ```
-COMMENT ON PLOT!!!!! ANSWER: Is the sample average of 𝜇̂ 
- across tests for which the null is rejected approximately equal to the true value of 𝜇
-? Why or why not?
+This plot shows that at lower values of the true mean, the average estimate of the mean was higher than the true mean among samples for which the null was rejected. For true mean values ~ >3, we see that the true mean and the average estimate of the mean closely align.
+
+The sample average of 𝜇̂ across tests for which the null is rejected was NOT approximately equal to the true value of 𝜇for lower values, but it was approximately equal at higher values. This makes sense because at low values, the true mean was closer to the null value of 0, therefore only in the trials where the estimate of the mean was higher than the true value was the computed test statistic large enough and the associated p-value small enough to reject the null hypothesis.
+
 
 ## Problem 3
 
